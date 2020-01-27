@@ -20,6 +20,10 @@ class App extends Component {
     openChatUser: null,
     currentChatMessages: null
   }
+  
+  componentDidMount(){
+    {this.socketF()}
+  }
 
 socketF = () =>{
 
@@ -27,11 +31,26 @@ socketF = () =>{
     console.log(m)
   
     if(m.sender === this.state.currentUser._id){
+      console.log("socket1")
       if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
     }
     if(m.reciever === this.state.currentUser._id){
-      if (m.sender === this.state.openChatUser._id){this.getCurrentChatMessages()}
-      else{
+      if(this.state.openChatUser){
+        if (m.sender === this.state.openChatUser._id){
+          console.log("socket2")
+          this.getCurrentChatMessages()}
+        else{
+          console.log("socket3")
+          const newAllUsers = this.state.allUsers.map((user) => {
+            if(m.sender === user._id){user.newMessage = true
+            return user}else{
+              return user
+            }
+          })
+          this.setState({allUsers: newAllUsers})
+        }
+      }else{
+        console.log("socket3")
         const newAllUsers = this.state.allUsers.map((user) => {
           if(m.sender === user._id){user.newMessage = true
           return user}else{
@@ -39,8 +58,9 @@ socketF = () =>{
           }
         })
         this.setState({allUsers: newAllUsers})
-      }
     }
+    }
+  
 
   })
 }
@@ -190,7 +210,7 @@ socketF = () =>{
     return (
       <div>
         <h1>check</h1>
-        {this.socketF()}
+        
         {this.navBar()}
         {this.whichPage()}
         {this.showChat()}
