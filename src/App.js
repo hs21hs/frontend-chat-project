@@ -29,17 +29,27 @@ socketF = () =>{
 
   socket.on('bc', (m)=>{
     console.log(m)
-  
-    if(m.sender === this.state.currentUser._id){
-      console.log("socket1")
-      if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
-    }
-    if(m.reciever === this.state.currentUser._id){
-      if(this.state.openChatUser){
-        if (m.sender === this.state.openChatUser._id){
-          console.log("socket2")
-          this.getCurrentChatMessages()}
-        else{
+    if(this.state.currentUser){
+      if(m.sender === this.state.currentUser._id){
+        console.log("socket1")
+        if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
+      }
+      if(m.reciever === this.state.currentUser._id){
+        if(this.state.openChatUser){
+          if (m.sender === this.state.openChatUser._id){
+            console.log("socket2")
+            this.getCurrentChatMessages()}
+          else{
+            console.log("socket3")
+            const newAllUsers = this.state.allUsers.map((user) => {
+              if(m.sender === user._id){user.newMessage = true
+              return user}else{
+                return user
+              }
+            })
+            this.setState({allUsers: newAllUsers})
+          }
+        }else{
           console.log("socket3")
           const newAllUsers = this.state.allUsers.map((user) => {
             if(m.sender === user._id){user.newMessage = true
@@ -48,20 +58,10 @@ socketF = () =>{
             }
           })
           this.setState({allUsers: newAllUsers})
-        }
-      }else{
-        console.log("socket3")
-        const newAllUsers = this.state.allUsers.map((user) => {
-          if(m.sender === user._id){user.newMessage = true
-          return user}else{
-            return user
-          }
-        })
-        this.setState({allUsers: newAllUsers})
+      }
+      }
+    
     }
-    }
-  
-
   })
 }
 
@@ -162,10 +162,10 @@ socketF = () =>{
     this.setState({openChatUser: user})
     setTimeout(() => {this.getCurrentChatMessages()}, 200) 
     if (toggleNewMsg){
-      const newAllUsers = this.state.allUsers.map((user) => {
-        if(user === user){user.newMessage = false
-        return user}else{
-          return user
+      const newAllUsers = this.state.allUsers.map((iUser) => {
+        if(iUser === user){iUser.newMessage = false
+        return iUser}else{
+          return iUser
         }
       })
       this.setState({allUsers: newAllUsers})
