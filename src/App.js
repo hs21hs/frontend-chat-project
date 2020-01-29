@@ -18,28 +18,39 @@ class App extends Component {
     allUsers:null,
     page: 'signUp',
     openChatUser: null,
-    currentChatMessages: null
+    currentChatMessages: null,
+    token: null
   }
   
   componentDidMount(){
     {this.socketF()}
   }
 
-socketF = () =>{
+  socketF = () =>{
 
-  socket.on('bc', (m)=>{
-    console.log(m)
-    if(this.state.currentUser){
-      if(m.sender === this.state.currentUser._id){
-        console.log("socket1")
-        if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
-      }
-      if(m.reciever === this.state.currentUser._id){
-        if(this.state.openChatUser){
-          if (m.sender === this.state.openChatUser._id){
-            console.log("socket2")
-            this.getCurrentChatMessages()}
-          else{
+    socket.on('bc', (m)=>{
+      console.log(m)
+      if(this.state.currentUser){
+        if(m.sender === this.state.currentUser._id){
+          console.log("socket1")
+          if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
+        }
+        if(m.reciever === this.state.currentUser._id){
+          if(this.state.openChatUser){
+            if (m.sender === this.state.openChatUser._id){
+              console.log("socket2")
+              this.getCurrentChatMessages()}
+            else{
+              console.log("socket3")
+              const newAllUsers = this.state.allUsers.map((user) => {
+                if(m.sender === user._id){user.newMessage = true
+                return user}else{
+                  return user
+                }
+              })
+              this.setState({allUsers: newAllUsers})
+            }
+          }else{
             console.log("socket3")
             const newAllUsers = this.state.allUsers.map((user) => {
               if(m.sender === user._id){user.newMessage = true
@@ -48,22 +59,20 @@ socketF = () =>{
               }
             })
             this.setState({allUsers: newAllUsers})
-          }
-        }else{
-          console.log("socket3")
-          const newAllUsers = this.state.allUsers.map((user) => {
-            if(m.sender === user._id){user.newMessage = true
-            return user}else{
-              return user
-            }
-          })
-          this.setState({allUsers: newAllUsers})
+        }
+        }
+      
       }
-      }
+    })
+  }
+
+  whichPage = () => {
+    if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
     
-    }
-  })
-}
+    if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
+
+    if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat}/>}
+  }
 
   navBar = () => {
     if(this.state.page === "login" || this.state.page === "signUp"){
@@ -83,66 +92,79 @@ socketF = () =>{
     }
   }
 
-  logout = () => {
-    this.setState(
-      {
-        currentUser:null,
-        allUsers:null,
-        page: 'signUp',
-        openChatUser: null
-      }
-    )
-  }
-  
   switchPage = (page) => {
     this.setState({page: page})
   }
 
 
-  whichPage = () => {
-    if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
-    
-    if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
-
-    if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat}/>}
-  }
-
-  login = (e) => {
-    e.preventDefault()
-    const username = {username:e.target.elements.username.value}
-    console.log(username)
-    
-    fetch("http://localhost:3000/users/login", {method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",         
-    },
-    body: JSON.stringify(username)})
-    .then((resp) => resp.json())
-    .then((body) => {if(body.username){
-      this.setState({currentUser: body})
-      setTimeout(() => {this.switchPage("home")},200) 
-    }else{alert("failed, try again pls!")}
-  })
-  }
+  
 
   signUp = (e) => {
     e.preventDefault()
-    const username = {username:e.target.elements.username.value}
-    
+    const password = e.target.elements.password.value
+    const username = e.target.elements.username.value
+    const user = {username,password}
+
     fetch("http://localhost:3000/users", {method: "POST",
       headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",         
       },
-      body: JSON.stringify(username)})
+      body: JSON.stringify(user)})
       .then((resp) => resp.json())
-      .then((body) => {if(body.username){
-        this.setState({currentUser: body})
+      .then((body) => {if(body.user){
+        this.setState({currentUser: body.user})
+        this.setState({token: body.token})
         setTimeout(() => {this.switchPage("home")},200) 
       }else{alert("failed, try again pls!")}
     })
   }
+
+  login = (e) => {
+    e.preventDefault()
+    const password = e.target.elements.password.value
+    const username = e.target.elements.username.value
+    const user = {username,password}
+    
+    fetch("http://localhost:3000/users/login", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",         
+    },
+    body: JSON.stringify(user)})
+    .then((resp) => resp.json())
+    .then((body) => {if(body.user){
+      this.setState({currentUser: body.user})
+      this.setState({token: body.token})
+      setTimeout(() => {this.switchPage("home")},200) 
+    }else{alert("failed, try again pls!")}
+    })
+  }
+
+  logout = () => {
+    fetch("http://localhost:3000/users/logout", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer "+this.state.token         
+      }
+    }).then((x) => {this.logoutFromFrontend()})
+  }
+
+  logoutFromFrontend = () => {
+    this.setState(
+      {
+        currentUser:null,
+        allUsers:null,
+        page: 'signUp',
+        openChatUser: null,
+        token: null
+      }
+    )
+  }
+
 
 
   getAllUsers = () => {
@@ -150,7 +172,8 @@ socketF = () =>{
     fetch("http://localhost:3000/getAllUsers", {method: "POST",
       headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",         
+          "Accept": "application/json", 
+          "Authorization": "Bearer "+this.state.token        
       },
       body: JSON.stringify(currentUser)})
       .then((resp) => resp.json())
@@ -160,6 +183,7 @@ socketF = () =>{
   openChat = (user, toggleNewMsg) => {
     
     this.setState({openChatUser: user})
+    this.setState({currentChatMessages: null})
     setTimeout(() => {this.getCurrentChatMessages()}, 200) 
     if (toggleNewMsg){
       const newAllUsers = this.state.allUsers.map((iUser) => {
@@ -189,7 +213,8 @@ socketF = () =>{
     fetch("http://localhost:3000/currentMessages", {method: "POST",
     headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",         
+        "Accept": "application/json",   
+        "Authorization": "Bearer "+this.state.token      
     },
     body: JSON.stringify(chatInfo)}).then((resp) => resp.json()).then((body) => this.setState({currentChatMessages: body}))
   }
@@ -206,6 +231,8 @@ socketF = () =>{
     socket.emit("newMessage", messageInfo)
   }
 
+
+  
   render () {
     return (
       <div>

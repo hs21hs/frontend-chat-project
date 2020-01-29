@@ -8,6 +8,7 @@ class Login extends Component {
         <h1>login page</h1>
         <form onSubmit = {(e) => {this.props.login(e)}}>
             <input name = "username" placeholder = "username"></input>
+            <input name = "password" placeholder = "password" type = "password"></input>
             <button type = "submit"> login</button>
         </form>
     </div>

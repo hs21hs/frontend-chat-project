@@ -8,6 +8,7 @@ class SignUp extends Component {
         <h1>sign up page</h1>
         <form onSubmit = {(e) => {this.props.signUp(e)}}>
             <input name = "username" placeholder = "username"></input>
+            <input name = "password" placeholder = "password" type = "password"></input>
             <button type = "submit"> signUp</button>
         </form>
     </div>
