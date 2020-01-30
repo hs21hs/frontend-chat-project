@@ -7,7 +7,7 @@ class Chat extends Component {
     displayMessages = () => {
         if (this.props.state.currentChatMessages){
             return this.props.state.currentChatMessages.map((message) => {
-                return <Message message = {message} />
+                return <Message message = {message} key = {message._id}/>
             })
         }
     }

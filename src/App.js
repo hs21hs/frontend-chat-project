@@ -16,7 +16,7 @@ class App extends Component {
   state = {
     currentUser:null,
     allUsers:null,
-    page: 'signUp',
+    page: 'login',
     openChatUser: null,
     currentChatMessages: null,
     token: null
@@ -117,7 +117,7 @@ class App extends Component {
         this.setState({token: body.token})
         setTimeout(() => {this.switchPage("home")},200) 
       }else{alert("failed, try again pls!")}
-    })
+      }).catch((e) => {alert("failed. try again pls!")})
   }
 
   login = (e) => {
@@ -134,12 +134,14 @@ class App extends Component {
     },
     body: JSON.stringify(user)})
     .then((resp) => resp.json())
-    .then((body) => {if(body.user){
-      this.setState({currentUser: body.user})
-      this.setState({token: body.token})
-      setTimeout(() => {this.switchPage("home")},200) 
-    }else{alert("failed, try again pls!")}
+    .then((body) => {
+      if(body.user){
+        this.setState({currentUser: body.user})
+        this.setState({token: body.token})
+        setTimeout(() => {this.switchPage("home")},200) 
+      }else{alert("failed, try again pls!")}
     })
+    .catch((e) => {alert("failed. try again pls!")})
   }
 
   logout = () => {
@@ -151,6 +153,7 @@ class App extends Component {
           "Authorization": "Bearer "+this.state.token         
       }
     }).then((x) => {this.logoutFromFrontend()})
+    .catch((e) => {alert("failed. try again pls!")})
   }
 
   logoutFromFrontend = () => {
@@ -158,7 +161,7 @@ class App extends Component {
       {
         currentUser:null,
         allUsers:null,
-        page: 'signUp',
+        page: 'login',
         openChatUser: null,
         token: null
       }
@@ -178,6 +181,7 @@ class App extends Component {
       body: JSON.stringify(currentUser)})
       .then((resp) => resp.json())
       .then((body) => this.setState({allUsers: body}))
+      .catch((e) => {console.log("failed to get all users")})
   }
 
   openChat = (user, toggleNewMsg) => {
@@ -203,12 +207,12 @@ class App extends Component {
   }
 
   getCurrentChatMessages = () => {
-    console.log("trying to get curnt msgs")
+
     const currentUser = this.state.currentUser
     const chatPartner = this.state.openChatUser
     
     const chatInfo = {currentUser, chatPartner}
-    console.log(chatInfo)
+    
   
     fetch("http://localhost:3000/currentMessages", {method: "POST",
     headers: {
@@ -216,7 +220,10 @@ class App extends Component {
         "Accept": "application/json",   
         "Authorization": "Bearer "+this.state.token      
     },
-    body: JSON.stringify(chatInfo)}).then((resp) => resp.json()).then((body) => this.setState({currentChatMessages: body}))
+    body: JSON.stringify(chatInfo)})
+    .then((resp) => resp.json())
+    .then((body) => this.setState({currentChatMessages: body}))
+    .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
   }
 
   sendMessage = (e) => {

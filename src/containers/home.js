@@ -11,7 +11,7 @@ class Home extends Component {
         
         if (this.props.state.allUsers){
             return this.props.state.allUsers.map((user) => {
-                return <ChatThumbnail user = {user} openChat = {this.props.openChat}/>
+                return <ChatThumbnail user = {user} openChat = {this.props.openChat} key = {user._id}/>
             })
         }
     }
