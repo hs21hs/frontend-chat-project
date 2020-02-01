@@ -4,13 +4,11 @@ import Login from './containers/login';
 import Home from './containers/home'
 import Chat from './containers/chat'
 import io from 'socket.io-client'
+import Button from 'react-bootstrap/Button'
+import './App.css';
 
 let socket = io(`http://localhost:3000`)
-
-
-
 //socket.on('countUpdated', () => {console.log("recieved")} )
-
 
 class App extends Component {
   state = {
@@ -27,8 +25,8 @@ class App extends Component {
   }
 
   socketF = () =>{
-
-    socket.on('bc', (m)=>{
+    socket.on('bc', 
+    (m)=>{
       console.log(m)
       if(this.state.currentUser){
         if(m.sender === this.state.currentUser._id){
@@ -53,38 +51,36 @@ class App extends Component {
           }else{
             console.log("socket3")
             const newAllUsers = this.state.allUsers.map((user) => {
-              if(m.sender === user._id){user.newMessage = true
-              return user}else{
+              if(m.sender === user._id){
+                user.newMessage = true
+                return user}else{
                 return user
               }
             })
             this.setState({allUsers: newAllUsers})
+          }
         }
-        }
-      
       }
     })
   }
 
   whichPage = () => {
     if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
-    
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
-
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat}/>}
   }
 
   navBar = () => {
     if(this.state.page === "login" || this.state.page === "signUp"){
       return(
-        <div>
-          <button onClick = {() => {this.switchPage("login")}} >login</button>
+        <div class = "row mr">
+          <Button variant="danger" onClick = {() => {this.switchPage("login")}} >login</Button>
           <button onClick = {() => {this.switchPage("signUp")}} >sign up</button>
         </div>
       )
     }else{
       return(
-        <div>
+        <div class = "row">
           <button onClick = {() => {this.logout()}} >logout</button>
           <button onClick = {() => {this.switchPage("home")}} >home</button>
         </div>
@@ -97,7 +93,6 @@ class App extends Component {
   }
 
 
-  
 
   signUp = (e) => {
     e.preventDefault()
@@ -105,40 +100,45 @@ class App extends Component {
     const username = e.target.elements.username.value
     const user = {username,password}
 
-    fetch("http://localhost:3000/users", {method: "POST",
+    fetch("http://localhost:3000/users", {
+      method: "POST",
       headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",         
+        "Content-Type": "application/json",
+        "Accept": "application/json"         
       },
-      body: JSON.stringify(user)})
-      .then((resp) => resp.json())
-      .then((body) => {if(body.user){
-        this.setState({currentUser: body.user})
-        this.setState({token: body.token})
-        setTimeout(() => {this.switchPage("home")},200) 
+      body: JSON.stringify(user)
+    })
+    .then((resp) => resp.json())
+    .then((body) => {
+      if(body.user){
+        this.setState({currentUser: body.user, token: body.token},
+          () => {this.switchPage("home")}
+        ) 
       }else{alert("failed, try again pls!")}
-      }).catch((e) => {alert("failed. try again pls!")})
+    })
+    .catch((e) => {alert("failed. try again pls!")})
   }
 
   login = (e) => {
     e.preventDefault()
     const password = e.target.elements.password.value
     const username = e.target.elements.username.value
-    const user = {username,password}
-    
+    const user = {username, password}
+
     fetch("http://localhost:3000/users/login", {
-    method: "POST",
-    headers: {
+      method: "POST",
+      headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",         
-    },
-    body: JSON.stringify(user)})
+      },
+      body: JSON.stringify(user)
+    })
     .then((resp) => resp.json())
     .then((body) => {
       if(body.user){
-        this.setState({currentUser: body.user})
-        this.setState({token: body.token})
-        setTimeout(() => {this.switchPage("home")},200) 
+        this.setState({currentUser: body.user,token: body.token},
+          () => {this.switchPage("home")}
+        ) 
       }else{alert("failed, try again pls!")}
     })
     .catch((e) => {alert("failed. try again pls!")})
@@ -152,7 +152,8 @@ class App extends Component {
           "Accept": "application/json",
           "Authorization": "Bearer "+this.state.token         
       }
-    }).then((x) => {this.logoutFromFrontend()})
+    })
+    .then((x) => {this.logoutFromFrontend()})
     .catch((e) => {alert("failed. try again pls!")})
   }
 
@@ -172,27 +173,30 @@ class App extends Component {
 
   getAllUsers = () => {
     const currentUser = {currentUser: this.state.currentUser}
-    fetch("http://localhost:3000/getAllUsers", {method: "POST",
+
+    fetch("http://localhost:3000/getAllUsers", {
+      method: "POST",
       headers: {
           "Content-Type": "application/json",
           "Accept": "application/json", 
           "Authorization": "Bearer "+this.state.token        
       },
-      body: JSON.stringify(currentUser)})
-      .then((resp) => resp.json())
-      .then((body) => this.setState({allUsers: body}))
-      .catch((e) => {console.log("failed to get all users")})
+      body: JSON.stringify(currentUser)
+    })
+    .then((resp) => resp.json())
+    .then((body) => this.setState({allUsers: body}))
+    .catch((e) => {console.log("failed to get all users")})
   }
 
   openChat = (user, toggleNewMsg) => {
-    
-    this.setState({openChatUser: user})
-    this.setState({currentChatMessages: null})
-    setTimeout(() => {this.getCurrentChatMessages()}, 200) 
+    this.setState({openChatUser: user, currentChatMessages: null},
+      () => {this.getCurrentChatMessages()}
+    ) 
     if (toggleNewMsg){
       const newAllUsers = this.state.allUsers.map((iUser) => {
-        if(iUser === user){iUser.newMessage = false
-        return iUser}else{
+        if(iUser === user){
+          iUser.newMessage = false
+          return iUser}else{
           return iUser
         }
       })
@@ -207,20 +211,19 @@ class App extends Component {
   }
 
   getCurrentChatMessages = () => {
-
     const currentUser = this.state.currentUser
     const chatPartner = this.state.openChatUser
-    
     const chatInfo = {currentUser, chatPartner}
     
-  
-    fetch("http://localhost:3000/currentMessages", {method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",   
-        "Authorization": "Bearer "+this.state.token      
-    },
-    body: JSON.stringify(chatInfo)})
+    fetch("http://localhost:3000/currentMessages", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",   
+          "Authorization": "Bearer "+this.state.token      
+      },
+      body: JSON.stringify(chatInfo)
+    })
     .then((resp) => resp.json())
     .then((body) => this.setState({currentChatMessages: body}))
     .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
@@ -228,23 +231,22 @@ class App extends Component {
 
   sendMessage = (e) => {
     e.preventDefault()
-    
+
     const message = e.target.elements.message.value
     const sender = this.state.currentUser
     const reciever = this.state.openChatUser
 
     const messageInfo = {message, sender, reciever}
-
+    
     socket.emit("newMessage", messageInfo)
   }
 
 
-  
+
   render () {
     return (
-      <div>
+      <div class = "container">
         <h1>check</h1>
-        
         {this.navBar()}
         {this.whichPage()}
         {this.showChat()}

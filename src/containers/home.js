@@ -18,7 +18,7 @@ class Home extends Component {
 
   render () {
     return (
-    <div>
+    <div class = "col">
         <h1>home page</h1>
         {this.createChatThumbnails()}
     </div>
