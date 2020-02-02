@@ -4,3 +4,24 @@
   border: 2px solid saddlebrown;
 }
 
+.userThumbnail {
+  height: 100px;
+  width: 100px 
+}
+
+.userThumbnailImg{
+  height: 20%;
+  width: 20% px;
+  border: 2px solid saddlebrown;
+}
+
+.swipeCard {
+  height: 10%;
+  width: 10% 
+}
+
+.swipeCardImg{
+  height: 20%;
+  width: 20% px;
+  border: 2px solid saddlebrown;
+}

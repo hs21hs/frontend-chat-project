@@ -3,6 +3,8 @@ import SignUp from './containers/signUp';
 import Login from './containers/login';
 import Home from './containers/home'
 import Chat from './containers/chat'
+import ProfilePage from './containers/profilePage'
+import SwipePage from './containers/swipePage'
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
 import './App.css';
@@ -14,6 +16,7 @@ class App extends Component {
   state = {
     currentUser:null,
     allUsers:null,
+    swipeUsers: null,
     page: 'login',
     openChatUser: null,
     currentChatMessages: null,
@@ -67,7 +70,9 @@ class App extends Component {
   whichPage = () => {
     if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
-    if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat}/>}
+    if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
+    if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
+    if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers}/>}
   }
 
   navBar = () => {
@@ -83,6 +88,8 @@ class App extends Component {
         <div class = "row">
           <button onClick = {() => {this.logout()}} >logout</button>
           <button onClick = {() => {this.switchPage("home")}} >home</button>
+          <button onClick = {() => {this.switchPage("profilePage")}} >profilePage</button>
+          <button onClick = {() => {this.switchPage("swipePage")}} >swipePage</button>
         </div>
       )
     }
@@ -91,8 +98,6 @@ class App extends Component {
   switchPage = (page) => {
     this.setState({page: page})
   }
-
-
 
   signUp = (e) => {
     e.preventDefault()
@@ -247,6 +252,27 @@ class App extends Component {
   }
 
 
+  
+
+
+  getSwipeUsers = () => {
+    const currentUser = {currentUser: this.state.currentUser}
+
+    fetch("http://localhost:3000/getSwipeUsers", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json", 
+          "Authorization": "Bearer "+this.state.token        
+      },
+      body: JSON.stringify(currentUser)
+    })
+    .then((resp) => resp.json())
+    .then((body) => this.setState({swipeUsers: body}))
+    .catch((e) => {console.log("failed to get swipe users")})
+  }
+
+
 
   render () {
     return (
@@ -254,7 +280,6 @@ class App extends Component {
         <h1>check</h1>
         {this.navBar()}
         {this.whichPage()}
-        {this.showChat()}
       </div>
     )
   }

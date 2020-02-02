@@ -3,7 +3,7 @@ import ChatThumbnail from '../components/chatThumbnail';
 
 class Home extends Component {
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.props.getAllUsers()
     }
 
@@ -21,6 +21,7 @@ class Home extends Component {
     <div class = "col">
         <h1>home page</h1>
         {this.createChatThumbnails()}
+        {this.props.showChat()}
     </div>
     )
   }
