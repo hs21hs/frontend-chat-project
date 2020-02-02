@@ -72,7 +72,7 @@ class App extends Component {
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
-    if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers}/>}
+    if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike}/>}
   }
 
   navBar = () => {
@@ -272,6 +272,29 @@ class App extends Component {
     .catch((e) => {console.log("failed to get swipe users")})
   }
 
+  dislike = (user) => {
+    const sender = this.state.currentUser._id
+    const reciever = user._id
+    const like = {sender,reciever}
+
+    fetch("http://localhost:3000/dislikes", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",   
+          "Authorization": "Bearer "+this.state.token      
+      },
+      body: JSON.stringify(like)
+    })
+    .then((resp) => resp.json())
+    .then((body) => {
+      const newSwipeUsers = this.state.swipeUsers.filter((sUser) => {
+          if(sUser._id === body.reciever){return false}else{return true}
+        })
+      this.setState({swipeUsers: newSwipeUsers})
+    })
+    .catch((e) => {console.log('e',e)})
+  }
 
 
   render () {

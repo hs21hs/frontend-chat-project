@@ -11,7 +11,7 @@ class SwipePage extends Component {
 
     showUsers = () => {
         if (this.props.state.swipeUsers){
-            return <SwipeCard state = {this.props.state}/>
+            return <SwipeCard state = {this.props.state} dislike = {this.props.dislike}/>
         }
     }
 
