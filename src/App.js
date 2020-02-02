@@ -98,7 +98,12 @@ class App extends Component {
     e.preventDefault()
     const password = e.target.elements.password.value
     const username = e.target.elements.username.value
-    const user = {username,password}
+    const email = e.target.elements.email.value
+    const breed = e.target.elements.breed.value
+    const age = e.target.elements.age.value
+    
+    
+    const user = {username,password,email,breed,age}
 
     fetch("http://localhost:3000/users", {
       method: "POST",
@@ -122,8 +127,8 @@ class App extends Component {
   login = (e) => {
     e.preventDefault()
     const password = e.target.elements.password.value
-    const username = e.target.elements.username.value
-    const user = {username, password}
+    const email = e.target.elements.email.value
+    const user = {email, password}
 
     fetch("http://localhost:3000/users/login", {
       method: "POST",
