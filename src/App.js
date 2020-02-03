@@ -5,6 +5,7 @@ import Home from './containers/home'
 import Chat from './containers/chat'
 import ProfilePage from './containers/profilePage'
 import SwipePage from './containers/swipePage'
+import MatchesPage from './containers/matchesPage'
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
 import './App.css';
@@ -20,6 +21,7 @@ class App extends Component {
     page: 'login',
     openChatUser: null,
     currentChatMessages: null,
+    matches: null, 
     token: null
   }
   
@@ -73,6 +75,7 @@ class App extends Component {
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like}/>}
+    if (this.state.page === "matches"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} />}
   }
 
   navBar = () => {
@@ -90,6 +93,7 @@ class App extends Component {
           <button onClick = {() => {this.switchPage("home")}} >home</button>
           <button onClick = {() => {this.switchPage("profilePage")}} >profilePage</button>
           <button onClick = {() => {this.switchPage("swipePage")}} >swipePage</button>
+          <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
         </div>
       )
     }
@@ -321,6 +325,21 @@ class App extends Component {
   }
   
 
+
+  getMyMatches = () => {
+
+    fetch("http://localhost:3000/getMyMatches", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json", 
+          "Authorization": "Bearer "+this.state.token        
+      }
+    })
+    .then((resp) => resp.json())
+    .then((body) => this.setState({matches: body}))
+    .catch((e) => {console.log("failed to get matches",e)})
+  }
 
   render () {
     return (
