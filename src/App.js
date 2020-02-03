@@ -75,7 +75,7 @@ class App extends Component {
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like}/>}
-    if (this.state.page === "matches"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} />}
+    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} />}
   }
 
   navBar = () => {
@@ -327,8 +327,8 @@ class App extends Component {
 
 
   getMyMatches = () => {
-
-    fetch("http://localhost:3000/getMyMatches", {
+console.log('getting matches!!')
+    fetch("http://localhost:3000/myMatches", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
