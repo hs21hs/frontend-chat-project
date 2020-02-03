@@ -6,8 +6,7 @@ class MatchThumbnail extends Component {
   render () {
     return (
     <div>
-      match tn
-      name: {this.props.user.username}
+      <button onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} </button> 
     </div>
     )
   }

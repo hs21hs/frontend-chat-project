@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import MatchThumbnail from '../components/matchThumbnail'
+import MatchChat from '../containers/matchChat'
 
 class MatchesPage extends Component {
 
@@ -9,9 +10,11 @@ class MatchesPage extends Component {
 
   createMatchThumbnails = () => {
         
-    if (this.props.state.matches){
+    if (this.props.state.currentMatchChatUser){
+      return <MatchChat user = {this.props.state.currentMatchChatUser} state = {this.props.state} backToMatchThumbnails = {this.props.backToMatchThumbnails} getMatchChatMessages = {this.props.getMatchChatMessages} sendMessage = {this.props.sendMessage}/>
+    }else if (this.props.state.matches){
         return this.props.state.matches.map((user) => {
-            return <MatchThumbnail user = {user}  key = {user._id}/>
+            return <MatchThumbnail user = {user}  key = {user._id} openMatchChat = {this.props.openMatchChat}/>
         })
     }
 }

@@ -21,6 +21,8 @@ class App extends Component {
     page: 'login',
     openChatUser: null,
     currentChatMessages: null,
+    currentMatchChatUser: null,
+    currentMatchChatMessages: null,
     matches: null, 
     token: null
   }
@@ -85,7 +87,7 @@ class App extends Component {
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like}/>}
-    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} />}
+    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage}/>}
   }
 
   navBar = () => {
@@ -371,6 +373,53 @@ class App extends Component {
     .then((resp) => resp.json())
     .then((body) => this.setState({matches: body}))
     .catch((e) => {console.log("failed to get matches",e)})
+  }
+
+  openMatchChat = (user) => {
+    this.setState({currentMatchChatUser: user})
+  }
+
+  backToMatchThumbnails = () => {
+    this.setState({currentMatchChatUser: null})
+  }
+
+  getMatchChatMessages = () => {
+    console.log('trying to get match msgs')
+    const currentUser = this.state.currentUser
+    const currentMatchChatPartner = this.state.currentMatchChatUser
+    const chatInfo = {currentUser, currentMatchChatPartner}
+    
+    fetch("http://localhost:3000/currentMessages", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",   
+          "Authorization": "Bearer "+this.state.token      
+      },
+      body: JSON.stringify(chatInfo)
+    })
+    .then((resp) => resp.json())
+    .then((body) => this.setState({currentMatchChatMessages: body}))
+    .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
+  }
+
+  showMatchChat = () => {
+    if (this.state.matchChatUser){
+      return <Chat state = {this.state} sendMessage = {this.sendMessage} getCurrentChatMessages = {this.getCurrentChatMessages}/>
+    }
+  }
+
+  sendMatchChatMessage = (e) => {
+    e.preventDefault()
+
+    const message = e.target.elements.message.value
+    const sender = this.state.currentUser
+    const reciever = this.state.currentMatchChatUser
+
+    const messageInfo = {message, sender, reciever}
+    
+    console.log('sending msf', messageInfo)
+    //socket.emit("newMessage", messageInfo)
   }
 
   render () {
