@@ -29,6 +29,7 @@ class App extends Component {
   
   componentDidMount(){
     {this.socketF(this.newMatchDetected)}
+   
   }
 
   socketF = (newMatchDetected) =>{
@@ -39,6 +40,24 @@ class App extends Component {
           console.log('you are part of the match!')
           newMatchDetected()
        }}
+         
+    )
+
+    socket.on("newMessage",
+      (msg) => {  
+        console.log('new msg from socket',msg)
+        if (msg.reciever === this.state.currentUser._id){
+          if(this.state.currentMatchChatUser){
+            if (msg.sender === this.state.currentMatchChatUser._id){
+              this.getMatchChatMessages()
+            }else{
+              this.setMatchesNewMsgTrue(msg)
+            }
+          }else{
+            this.setMatchesNewMsgTrue(msg)
+          }
+        }
+       }
          
     )
 
@@ -192,6 +211,8 @@ class App extends Component {
         page: 'login',
         openChatUser: null,
         currentChatMessages: null,
+        currentMatchChatUser: null,
+        currentMatchChatMessages: null,
         matches: null, 
         token: null
       }
@@ -386,8 +407,8 @@ class App extends Component {
   getMatchChatMessages = () => {
     console.log('trying to get match msgs')
     const currentUser = this.state.currentUser
-    const currentMatchChatPartner = this.state.currentMatchChatUser
-    const chatInfo = {currentUser, currentMatchChatPartner}
+    const chatPartner = this.state.currentMatchChatUser
+    const chatInfo = {currentUser, chatPartner}
     
     fetch("http://localhost:3000/currentMessages", {
       method: "POST",
@@ -412,20 +433,68 @@ class App extends Component {
   sendMatchChatMessage = (e) => {
     e.preventDefault()
 
-    const message = e.target.elements.message.value
+    const text = e.target.elements.message.value
     const sender = this.state.currentUser
     const reciever = this.state.currentMatchChatUser
 
-    const messageInfo = {message, sender, reciever}
-    
+    const messageInfo = {text, sender, reciever}
     console.log('sending msf', messageInfo)
-    //socket.emit("newMessage", messageInfo)
+
+    fetch("http://localhost:3000/messages", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",   
+          "Authorization": "Bearer "+this.state.token      
+      },
+      body: JSON.stringify(messageInfo)
+    })
+    .then((resp) => resp.json())
+    .then((body) => {
+      this.addMsgToChatState(body)
+      this.runNewMessageSocket(body)
+    })
+    .catch((e) => {console.log('e',e)})
   }
+    //socket.emit("newMessage", messageInfo)
+    addMsgToChatState = (msg) => {
+      console.log('addMsgToChatState',msg)
+      if (msg.sender === this.state.currentUser._id && msg.reciever === this.state.currentMatchChatUser._id){
+        this.getMatchChatMessages()
+      }
+    }
+    
+    runNewMessageSocket = (msg) => {
+      console.log('frm msg socket', msg)
+
+      socket.emit('newMessage',msg)
+    }
+  
+    newMessageDetected = (message) => {
+      alert("you have a new message")
+      
+    }
+
+    setMatchesNewMsgTrue = (msg) => {
+      console.log('ready to set it true', msg)
+      if (this.state.matches){
+        const newMatchesAr = this.state.matches.map((user) => {
+          if (user._id === msg.sender){
+            user.newMessage = true
+            return user
+          }else{
+            return user
+          }
+        })
+        this.setState({matches: newMatchesAr})
+      }
+    }
 
   render () {
     return (
       <div class = "container">
         <h1>check</h1>
+        {this.getMyMatches()}
         {this.navBar()}
         {this.whichPage()}
       </div>

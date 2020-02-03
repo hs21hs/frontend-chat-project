@@ -22,7 +22,7 @@ class MatchChat extends Component {
       <button onClick = {() => {this.props.backToMatchThumbnails()}}>back</button>
       <br/>
       match chat window with {this.props.user.username}
-    
+      {this.displayMessages()}
       <MessageForm state = {this.props.state} sendMessage = {this.props.sendMessage}/>
       
     </div>

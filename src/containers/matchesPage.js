@@ -5,7 +5,7 @@ import MatchChat from '../containers/matchChat'
 class MatchesPage extends Component {
 
   componentDidMount(){
-    this.props.getMyMatches()
+    
   }
 
   createMatchThumbnails = () => {
