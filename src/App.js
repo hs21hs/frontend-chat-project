@@ -26,10 +26,20 @@ class App extends Component {
   }
   
   componentDidMount(){
-    {this.socketF()}
+    {this.socketF(this.newMatchDetected)}
   }
 
-  socketF = () =>{
+  socketF = (newMatchDetected) =>{
+
+    socket.on("newMatch",
+      (match) => {  
+        if (match.userOne === this.state.currentUser._id || match.userTwo === this.state.currentUser._id){
+          console.log('you are part of the match!')
+          newMatchDetected()
+       }}
+         
+    )
+
     socket.on('bc', 
     (m)=>{
       console.log(m)
@@ -319,18 +329,37 @@ class App extends Component {
     })
     .then((resp) => resp.json())
     .then((body) => {
-      const newSwipeUsers = this.state.swipeUsers.filter((sUser) => {
-          if(sUser._id === body.reciever){return false}else{return true}
-        })
-      this.setState({swipeUsers: newSwipeUsers})
+      this.removeFromSwipUsers(body)
+      this.runNewMatchSocket(body)
     })
     .catch((e) => {console.log('e',e)})
   }
   
+      removeFromSwipUsers = (body) => {
+        const newSwipeUsers = this.state.swipeUsers.filter((sUser) => {
+          if(sUser._id === body.reciever){return false}else{return true}
+        })
+        this.setState({swipeUsers: newSwipeUsers})
+      }
+    
+      runNewMatchSocket = (like) => {
+        
+        if (like.match){
+          console.log('run new match socket')
+          this.newMatchDetected()
+          socket.emit('newMatch',like.match)
+        }
+      }
+
+      newMatchDetected = (match) => {
+        alert("you have a new match")
+        this.getMyMatches()
+      }
+
 
 
   getMyMatches = () => {
-console.log('getting matches!!')
+
     fetch("http://localhost:3000/myMatches", {
       method: "POST",
       headers: {
