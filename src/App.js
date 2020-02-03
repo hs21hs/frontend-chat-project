@@ -176,8 +176,11 @@ class App extends Component {
       {
         currentUser:null,
         allUsers:null,
+        swipeUsers: null,
         page: 'login',
         openChatUser: null,
+        currentChatMessages: null,
+        matches: null, 
         token: null
       }
     )

@@ -7,6 +7,7 @@ class MatchThumbnail extends Component {
     return (
     <div>
       match tn
+      name: {this.props.user.username}
     </div>
     )
   }
