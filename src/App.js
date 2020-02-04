@@ -46,17 +46,20 @@ class App extends Component {
     socket.on("newMessage",
       (msg) => {  
         console.log('new msg from socket',msg)
-        if (msg.reciever === this.state.currentUser._id){
-          if(this.state.currentMatchChatUser){
-            if (msg.sender === this.state.currentMatchChatUser._id){
-              this.getMatchChatMessages()
+        if(this.state.currentUser){
+          if (msg.reciever === this.state.currentUser._id){
+            if(this.state.currentMatchChatUser){
+              if (msg.sender === this.state.currentMatchChatUser._id){
+                this.getMatchChatMessages()
+              }else{
+                this.setMatchesNewMsgTrue(msg)
+              }
             }else{
               this.setMatchesNewMsgTrue(msg)
             }
-          }else{
-            this.setMatchesNewMsgTrue(msg)
           }
         }
+        
        }
          
     )
@@ -105,7 +108,7 @@ class App extends Component {
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
     if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
-    if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like}/>}
+    if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like} getMyMatches = {this.getMyMatches}/>}
     if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage}/>}
   }
 
@@ -124,10 +127,28 @@ class App extends Component {
           <button onClick = {() => {this.switchPage("home")}} >home</button>
           <button onClick = {() => {this.switchPage("profilePage")}} >profilePage</button>
           <button onClick = {() => {this.switchPage("swipePage")}} >swipePage</button>
-          <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
+          {this.matchesPageButton()}
         </div>
       )
     }
+  }
+
+  matchesPageButton = () => {
+    if(this.state.matches){
+      let newMsgUser = false
+      this.state.matches.forEach((user) => {
+        if(user.newMessage){newMsgUser = true}
+      })
+      console.log("nmu",newMsgUser)
+      if(newMsgUser){
+        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new msg)</button>
+      }else{
+        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
+      }
+    }else{
+      return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
+    }
+    
   }
 
   switchPage = (page) => {
@@ -157,7 +178,7 @@ class App extends Component {
     .then((body) => {
       if(body.user){
         this.setState({currentUser: body.user, token: body.token},
-          () => {this.switchPage("home")}
+          () => {this.switchPage("swipePage")}
         ) 
       }else{alert("failed, try again pls!")}
     })
@@ -182,13 +203,13 @@ class App extends Component {
     .then((body) => {
       if(body.user){
         this.setState({currentUser: body.user,token: body.token},
-          () => {this.switchPage("home")}
+          () => {this.switchPage("swipePage")}
         ) 
       }else{alert("failed, try again pls!")}
     })
     .catch((e) => {alert("failed. try again pls!")})
   }
-
+//whatever is the landing page needs to mount my matches
   logout = () => {
     fetch("http://localhost:3000/users/logout", {
       method: "POST",
@@ -420,9 +441,22 @@ class App extends Component {
       body: JSON.stringify(chatInfo)
     })
     .then((resp) => resp.json())
-    .then((body) => this.setState({currentMatchChatMessages: body}))
+    .then((body) => {
+      this.setUserNewMsgFalse(chatPartner,body)      
+    })
     .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
   }
+        setUserNewMsgFalse = (chatPartner,body) => {
+          const newMatchesAr = this.state.matches.map((user) => {
+            if (user._id === chatPartner._id){
+              user.newMessage = false
+            }
+            return user
+          })
+          this.setState({matches: newMatchesAr}, () => {
+            this.setState({currentMatchChatMessages: body})
+          })
+        }
 
   showMatchChat = () => {
     if (this.state.matchChatUser){
@@ -494,7 +528,6 @@ class App extends Component {
     return (
       <div class = "container">
         <h1>check</h1>
-        {this.getMyMatches()}
         {this.navBar()}
         {this.whichPage()}
       </div>
