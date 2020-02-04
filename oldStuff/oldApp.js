@@ -101,4 +101,74 @@ getCurrentChatMessages = () => {
   }
 }
 
+// getAllUsers = () => {
+  //   const currentUser = {currentUser: this.state.currentUser}
+
+  //   fetch("http://localhost:3000/getAllUsers", {
+  //     method: "POST",
+  //     headers: {
+  //         "Content-Type": "application/json",
+  //         "Accept": "application/json", 
+  //         "Authorization": "Bearer "+this.state.token        
+  //     },
+  //     body: JSON.stringify(currentUser)
+  //   })
+  //   .then((resp) => resp.json())
+  //   .then((body) => this.setState({allUsers: body}))
+  //   .catch((e) => {console.log("failed to get all users")})
+  // }
+
+  // openChat = (user, toggleNewMsg) => {
+  //   this.setState({openChatUser: user, currentChatMessages: null},
+  //     () => {this.getCurrentChatMessages()}
+  //   ) 
+  //   if (toggleNewMsg){
+  //     const newAllUsers = this.state.allUsers.map((iUser) => {
+  //       if(iUser === user){
+  //         iUser.newMessage = false
+  //         return iUser}else{
+  //         return iUser
+  //       }
+  //     })
+  //     this.setState({allUsers: newAllUsers})
+  //   }
+  // }
+
+  // showChat = () => {
+  //   if (this.state.openChatUser){
+  //     return <Chat state = {this.state} sendMessage = {this.sendMessage} getCurrentChatMessages = {this.getCurrentChatMessages}/>
+  //   }
+  // }
+
+  // getCurrentChatMessages = () => {
+  //   const currentUser = this.state.currentUser
+  //   const chatPartner = this.state.openChatUser
+  //   const chatInfo = {currentUser, chatPartner}
+    
+  //   fetch("http://localhost:3000/currentMessages", {
+  //     method: "POST",
+  //     headers: {
+  //         "Content-Type": "application/json",
+  //         "Accept": "application/json",   
+  //         "Authorization": "Bearer "+this.state.token      
+  //     },
+  //     body: JSON.stringify(chatInfo)
+  //   })
+  //   .then((resp) => resp.json())
+  //   .then((body) => this.setState({currentChatMessages: body}))
+  //   .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
+  // }
+
+  // sendMessage = (e) => {
+  //   e.preventDefault()
+
+  //   const message = e.target.elements.message.value
+  //   const sender = this.state.currentUser
+  //   const reciever = this.state.openChatUser
+
+  //   const messageInfo = {message, sender, reciever}
+    
+  //   socket.emit("newMessage", messageInfo)
+  // }  
+
 export default App;

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import SignUp from './containers/signUp';
 import Login from './containers/login';
-import Home from './containers/home'
 import Chat from './containers/chat'
 import ProfilePage from './containers/profilePage'
 import SwipePage from './containers/swipePage'
@@ -59,54 +58,14 @@ class App extends Component {
             }
           }
         }
-        
        }
-         
     )
 
-    socket.on('bc', 
-    (m)=>{
-      console.log(m)
-      if(this.state.currentUser){
-        if(m.sender === this.state.currentUser._id){
-          console.log("socket1")
-          if (m.reciever === this.state.openChatUser._id){this.getCurrentChatMessages()}
-        }
-        if(m.reciever === this.state.currentUser._id){
-          if(this.state.openChatUser){
-            if (m.sender === this.state.openChatUser._id){
-              console.log("socket2")
-              this.getCurrentChatMessages()}
-            else{
-              console.log("socket3")
-              const newAllUsers = this.state.allUsers.map((user) => {
-                if(m.sender === user._id){user.newMessage = true
-                return user}else{
-                  return user
-                }
-              })
-              this.setState({allUsers: newAllUsers})
-            }
-          }else{
-            console.log("socket3")
-            const newAllUsers = this.state.allUsers.map((user) => {
-              if(m.sender === user._id){
-                user.newMessage = true
-                return user}else{
-                return user
-              }
-            })
-            this.setState({allUsers: newAllUsers})
-          }
-        }
-      }
-    })
   }
 
   whichPage = () => {
     if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
-    if (this.state.page === "home"){return <Home  state = {this.state} getAllUsers = {this.getAllUsers} openChat = {this.openChat} showChat = {this.showChat}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like} getMyMatches = {this.getMyMatches}/>}
     if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage}/>}
@@ -124,7 +83,6 @@ class App extends Component {
       return(
         <div class = "row">
           <button onClick = {() => {this.logout()}} >logout</button>
-          <button onClick = {() => {this.switchPage("home")}} >home</button>
           <button onClick = {() => {this.switchPage("profilePage")}} >profilePage</button>
           <button onClick = {() => {this.switchPage("swipePage")}} >swipePage</button>
           {this.matchesPageButton()}
@@ -162,8 +120,7 @@ class App extends Component {
     const email = e.target.elements.email.value
     const breed = e.target.elements.breed.value
     const age = e.target.elements.age.value
-    
-    
+  
     const user = {username,password,email,breed,age}
 
     fetch("http://localhost:3000/users", {
@@ -239,81 +196,6 @@ class App extends Component {
       }
     )
   }
-
-
-
-  getAllUsers = () => {
-    const currentUser = {currentUser: this.state.currentUser}
-
-    fetch("http://localhost:3000/getAllUsers", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json", 
-          "Authorization": "Bearer "+this.state.token        
-      },
-      body: JSON.stringify(currentUser)
-    })
-    .then((resp) => resp.json())
-    .then((body) => this.setState({allUsers: body}))
-    .catch((e) => {console.log("failed to get all users")})
-  }
-
-  openChat = (user, toggleNewMsg) => {
-    this.setState({openChatUser: user, currentChatMessages: null},
-      () => {this.getCurrentChatMessages()}
-    ) 
-    if (toggleNewMsg){
-      const newAllUsers = this.state.allUsers.map((iUser) => {
-        if(iUser === user){
-          iUser.newMessage = false
-          return iUser}else{
-          return iUser
-        }
-      })
-      this.setState({allUsers: newAllUsers})
-    }
-  }
-
-  showChat = () => {
-    if (this.state.openChatUser){
-      return <Chat state = {this.state} sendMessage = {this.sendMessage} getCurrentChatMessages = {this.getCurrentChatMessages}/>
-    }
-  }
-
-  getCurrentChatMessages = () => {
-    const currentUser = this.state.currentUser
-    const chatPartner = this.state.openChatUser
-    const chatInfo = {currentUser, chatPartner}
-    
-    fetch("http://localhost:3000/currentMessages", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",   
-          "Authorization": "Bearer "+this.state.token      
-      },
-      body: JSON.stringify(chatInfo)
-    })
-    .then((resp) => resp.json())
-    .then((body) => this.setState({currentChatMessages: body}))
-    .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
-  }
-
-  sendMessage = (e) => {
-    e.preventDefault()
-
-    const message = e.target.elements.message.value
-    const sender = this.state.currentUser
-    const reciever = this.state.openChatUser
-
-    const messageInfo = {message, sender, reciever}
-    
-    socket.emit("newMessage", messageInfo)
-  }
-
-
-  
 
 
   getSwipeUsers = () => {
