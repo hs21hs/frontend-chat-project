@@ -93,13 +93,20 @@ class App extends Component {
 
   matchesPageButton = () => {
     if(this.state.matches){
-      let newMsgUser = false
+      let newMsg = false
+      let newMatch = false
+
       this.state.matches.forEach((user) => {
-        if(user.newMessage){newMsgUser = true}
+        if(user.newMessage){newMsg = true}
+        if(user.openedMatch === false ){newMatch = true}
       })
-      console.log("nmu",newMsgUser)
-      if(newMsgUser){
+      console.log("nmu",newMsg)
+      if(newMsg && !newMatch){
         return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new msg)</button>
+      }else if(!newMsg && newMatch){
+        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match)</button>
+      }else if(newMsg && newMatch){
+        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match & new msg)</button>
       }else{
         return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
       }
@@ -324,14 +331,15 @@ class App extends Component {
     })
     .then((resp) => resp.json())
     .then((body) => {
-      this.setUserNewMsgFalse(chatPartner,body)      
+      this.markMsgAndMatchAsOpened(chatPartner,body)      
     })
-    .catch((e) => {console.log("failed to get current chat msgs. try again pls!")})
+    .catch((e) => {console.log("failed to get current chat msgs. try again pls!",e)})
   }
-        setUserNewMsgFalse = (chatPartner,body) => {
+        markMsgAndMatchAsOpened = (chatPartner,body) => {
           const newMatchesAr = this.state.matches.map((user) => {
             if (user._id === chatPartner._id){
               user.newMessage = false
+              user.openedMatch = true
             }
             return user
           })
@@ -339,6 +347,8 @@ class App extends Component {
             this.setState({currentMatchChatMessages: body})
           })
         }
+
+    
 
   showMatchChat = () => {
     if (this.state.matchChatUser){
