@@ -35,11 +35,13 @@ class App extends Component {
 
     socket.on("newMatch",
       (match) => {  
-        if (match.userOne === this.state.currentUser._id || match.userTwo === this.state.currentUser._id){
-          console.log('you are part of the match!')
-          newMatchDetected()
-       }}
-         
+        if(this.state.currentUser){
+          if (match.userOne === this.state.currentUser._id || match.userTwo === this.state.currentUser._id){
+            console.log('you are part of the match!')
+            newMatchDetected()
+          }
+        }
+      }
     )
 
     socket.on("newMessage",
@@ -116,7 +118,12 @@ class App extends Component {
     
   }
 
+  setCurrentMatchChatUserToNull = () => {
+    this.setState({currentMatchChatUser:null})
+  }
+
   switchPage = (page) => {
+    this.setCurrentMatchChatUserToNull()
     this.setState({page: page})
   }
 
