@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
 
 class SwipeCard extends Component {
 
   showCard = () => {
     if (this.props.state.swipeUsers.length > 0){
       return(
-        <div class = "row swipeCard">
+        <div class = "swipeCard">
         <img class = "swipeCardImg" src = {this.props.state.swipeUsers[0].image_url} alt =""/>
         <div>
           <p>name:{this.props.state.swipeUsers[0].username}</p>
@@ -22,10 +24,30 @@ class SwipeCard extends Component {
     }else{return(<p>out of users to swipe!</p>)}
   }
 
+  bCard = () => {
+    if (this.props.state.swipeUsers.length > 0){
+      return(
+    <Card style={{ width: '18rem' }}>
+  <Card.Img variant="top" src={this.props.state.swipeUsers[0].image_url}/>
+  <Card.Body>
+    <Card.Title>name:{this.props.state.swipeUsers[0].username}</Card.Title>
+    <Card.Subtitle className="mb-2 text-muted">age:{this.props.state.swipeUsers[0].age}, breed:{this.props.state.swipeUsers[0].breed}</Card.Subtitle>
+    <Card.Text>
+      Some quick example text to build on the card title and make up the bulk of
+      the card's content.
+    </Card.Text>
+    <Button variant="primary" onClick = {() => {this.props.like(this.props.state.swipeUsers[0])}}>like</Button>
+    <Button variant="primary" onClick = {() => {this.props.dislike(this.props.state.swipeUsers[0])}}>dislike</Button>
+  </Card.Body>
+</Card>
+      )
+  }
+}
+
   render () {
     return (
       <div>
-        {this.showCard()}
+        {this.bCard()}
       </div>
     )
   }

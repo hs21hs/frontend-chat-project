@@ -5,7 +5,7 @@ class SignUp extends Component {
   render () {
     return (
     <div>
-        <h1>sign up page</h1>
+        <h1>SignUp Page</h1>
         <form onSubmit = {(e) => {this.props.signUp(e)}}>
             <input name = "email" placeholder = "email"></input>
             <input name = "password" placeholder = "password" type = "password"></input>

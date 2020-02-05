@@ -19,7 +19,7 @@ class SwipePage extends Component {
   render () {
     return (
     <div>
-        swipe page
+        <h1>swipe page</h1>
         {this.showUsers()}
     </div>
     )

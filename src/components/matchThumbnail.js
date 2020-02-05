@@ -1,16 +1,17 @@
 import React, {Component} from 'react';
+import Button from 'react-bootstrap/Button'
 
 class MatchThumbnail extends Component {
 
   showThumbnails = () => {
     if(this.props.user.newMessage === true && this.props.user.openedMatch === true){
-      return <button onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} NEW MSG!</button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New Msg!</Button>
     }else if(this.props.user.newMessage !== true && this.props.user.openedMatch === false){
-      return <button onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} NEW MATCH!</button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New Match!</Button>
     }else if(this.props.user.newMessage === true && this.props.user.openedMatch === false){
-      return <button onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} NEW MSG!&NEW MATCH!</button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New msg & New Match!</Button>
     }else{
-      return <button onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} </button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username}</Button>
     }
   }
   

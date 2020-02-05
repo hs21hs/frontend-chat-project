@@ -7,13 +7,13 @@ class ProfilePage extends Component {
   render () {
     return (
     <div>
-       profile page
-       <div class = "row userThumbnail">
+       <h1>Profile Page</h1>
+       <div >
             <UserThumbnail state = {this.props.state} />
        </div>
        <div>
-           <button>set filters</button>
-           <button>edit user details</button>
+           {/* <button>set filters</button>
+           <button>edit user details</button> */}
        </div>
     </div>
     )

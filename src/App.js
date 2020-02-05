@@ -77,16 +77,16 @@ class App extends Component {
     if(this.state.page === "login" || this.state.page === "signUp"){
       return(
         <div class = "row mr">
-          <Button variant="danger" onClick = {() => {this.switchPage("login")}} >login</Button>
-          <button onClick = {() => {this.switchPage("signUp")}} >sign up</button>
+          <Button variant="secondary" onClick = {() => {this.switchPage("login")}} >login</Button>
+          <Button variant="secondary" onClick = {() => {this.switchPage("signUp")}} >sign up</Button>
         </div>
       )
     }else{
       return(
         <div class = "row">
-          <button onClick = {() => {this.logout()}} >logout</button>
-          <button onClick = {() => {this.switchPage("profilePage")}} >profilePage</button>
-          <button onClick = {() => {this.switchPage("swipePage")}} >swipePage</button>
+          <Button variant="secondary" onClick = {() => {this.logout()}} >logout</Button>
+          <Button variant="secondary" onClick = {() => {this.switchPage("profilePage")}} >profilePage</Button>
+          <Button variant="secondary" onClick = {() => {this.switchPage("swipePage")}} >swipePage</Button>
           {this.matchesPageButton()}
         </div>
       )
@@ -104,16 +104,16 @@ class App extends Component {
       })
       console.log("nmu",newMsg)
       if(newMsg && !newMatch){
-        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new msg)</button>
+        return <Button variant="secondary" onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new msg)</Button>
       }else if(!newMsg && newMatch){
-        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match)</button>
+        return <Button variant="secondary" onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match!)</Button>
       }else if(newMsg && newMatch){
-        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match & new msg)</button>
+        return <Button variant="secondary" onClick = {() => {this.switchPage("matchesPage")}} >matchesPage(new match! & new msg)</Button>
       }else{
-        return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
+        return <Button variant="secondary" onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</Button>
       }
     }else{
-      return <button onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</button>
+      return <Button variant="secondary" onClick = {() => {this.switchPage("matchesPage")}} >matchesPage</Button>
     }
     
   }
@@ -426,7 +426,6 @@ class App extends Component {
   render () {
     return (
       <div class = "container">
-        <h1>check</h1>
         {this.navBar()}
         {this.whichPage()}
       </div>

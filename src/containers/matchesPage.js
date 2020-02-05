@@ -22,7 +22,7 @@ class MatchesPage extends Component {
   render () {
     return (
     <div>
-        <h1>MatchesPage</h1>
+        <h1>Matches Page</h1>
         {this.createMatchThumbnails()}
     </div>
     )
