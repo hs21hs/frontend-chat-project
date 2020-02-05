@@ -1,17 +1,55 @@
 import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button'
+import Image from 'react-bootstrap/Image'
+import Figure from 'react-bootstrap/Figure'
 
 class MatchThumbnail extends Component {
 
   showThumbnails = () => {
     if(this.props.user.newMessage === true && this.props.user.openedMatch === true){
-      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New Msg!</Button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
+       <Figure>
+        <Figure.Image
+        width={50}
+        height={50}
+        alt="50x50"
+        src={this.props.user.image_url}
+        />
+      </Figure> <br></br>
+      name: {this.props.user.username} New Msg!</Button>
     }else if(this.props.user.newMessage !== true && this.props.user.openedMatch === false){
-      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New Match!</Button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
+       <Figure>
+        <Figure.Image
+        width={50}
+        height={50}
+        alt="50x50"
+        src={this.props.user.image_url}
+        />
+      </Figure> <br></br>
+      name: {this.props.user.username} New Match!</Button>
     }else if(this.props.user.newMessage === true && this.props.user.openedMatch === false){
-      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username} New msg & New Match!</Button>
+      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
+       <Figure>
+        <Figure.Image
+        width={50}
+        height={50}
+        alt="50x50"
+        src={this.props.user.image_url}
+        />
+      </Figure> <br></br>
+      name: {this.props.user.username} New msg & New Match!</Button>
     }else{
-      return <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> name: {this.props.user.username}</Button>
+      return <Button bsClass='custom-class' variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
+      <Figure>
+        <Figure.Image
+        width={50}
+        height={50}
+        alt="50x50"
+        src={this.props.user.image_url}
+        />
+      </Figure> <br></br>
+      name: {this.props.user.username}</Button>
     }
   }
   

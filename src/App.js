@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import SignUp from './containers/signUp';
 import Login from './containers/login';
-import Chat from './containers/chat'
 import ProfilePage from './containers/profilePage'
 import SwipePage from './containers/swipePage'
 import MatchesPage from './containers/matchesPage'
@@ -21,6 +20,7 @@ class App extends Component {
     openChatUser: null,
     currentChatMessages: null,
     currentMatchChatUser: null,
+    matchChatUserProfilePage: null,
     currentMatchChatMessages: null,
     matches: null, 
     token: null
@@ -70,7 +70,7 @@ class App extends Component {
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like} getMyMatches = {this.getMyMatches}/>}
-    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage}/>}
+    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage} openMatchChatUsersProfilePage = {this.openMatchChatUsersProfilePage} backToMatchChat = {this.backToMatchChat}/>}
   }
 
   navBar = () => {
@@ -120,6 +120,7 @@ class App extends Component {
 
   setCurrentMatchChatUserToNull = () => {
     this.setState({currentMatchChatUser:null})
+    this.setState({matchChatUserProfilePage: null})
   }
 
   switchPage = (page) => {
@@ -313,6 +314,13 @@ class App extends Component {
     .catch((e) => {console.log("failed to get matches",e)})
   }
 
+  openMatchChatUsersProfilePage = () => {
+    this.setState({matchChatUserProfilePage: true})
+  }
+  backToMatchChat = () => {
+    this.setState({matchChatUserProfilePage: null})
+  }
+
   openMatchChat = (user) => {
     this.setState({currentMatchChatUser: user})
   }
@@ -357,11 +365,11 @@ class App extends Component {
 
     
 
-  showMatchChat = () => {
-    if (this.state.matchChatUser){
-      return <Chat state = {this.state} sendMessage = {this.sendMessage} getCurrentChatMessages = {this.getCurrentChatMessages}/>
-    }
-  }
+  // showMatchChat = () => {
+  //   if (this.state.matchChatUser){
+  //     return <Chat state = {this.state} sendMessage = {this.sendMessage} getCurrentChatMessages = {this.getCurrentChatMessages}/>
+  //   }
+  // }
 
   sendMatchChatMessage = (e) => {
     e.preventDefault()

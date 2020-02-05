@@ -24,30 +24,51 @@ class SwipeCard extends Component {
     }else{return(<p>out of users to swipe!</p>)}
   }
 
-  bCard = () => {
+  styledSwipeCard = () => {
+
     if (this.props.state.swipeUsers.length > 0){
-      return(
-    <Card style={{ width: '18rem' }}>
-  <Card.Img variant="top" src={this.props.state.swipeUsers[0].image_url}/>
-  <Card.Body>
-    <Card.Title>name:{this.props.state.swipeUsers[0].username}</Card.Title>
-    <Card.Subtitle className="mb-2 text-muted">age:{this.props.state.swipeUsers[0].age}, breed:{this.props.state.swipeUsers[0].breed}</Card.Subtitle>
-    <Card.Text>
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </Card.Text>
-    <Button variant="primary" onClick = {() => {this.props.like(this.props.state.swipeUsers[0])}}>like</Button>
-    <Button variant="primary" onClick = {() => {this.props.dislike(this.props.state.swipeUsers[0])}}>dislike</Button>
-  </Card.Body>
-</Card>
-      )
+      if (this.props.showCard === true){
+        return(
+          <> 
+            <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.backToMatchChat()}} >back </Button>
+            <Card style={{ width: '18rem' }}>
+              <Card.Img variant="top" src={this.props.state.currentMatchChatUser.image_url}/>
+              <Card.Body>
+                <Card.Title>name:{this.props.state.currentMatchChatUser.username}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">age:{this.props.state.currentMatchChatUser.age}, breed:{this.props.state.currentMatchChatUser.breed}</Card.Subtitle>
+                <Card.Text>
+                  Some quick example text to build on the card title and make up the bulk of
+                  the card's content.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </>
+            )
+      }else{
+        return(
+          <Card style={{ width: '18rem' }}>
+            <Card.Img variant="top" src={this.props.state.swipeUsers[0].image_url}/>
+            <Card.Body>
+              <Card.Title>name:{this.props.state.swipeUsers[0].username}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">age:{this.props.state.swipeUsers[0].age}, breed:{this.props.state.swipeUsers[0].breed}</Card.Subtitle>
+              <Card.Text>
+                Some quick example text to build on the card title and make up the bulk of
+                the card's content.
+              </Card.Text>
+              <Button variant="primary" onClick = {() => {this.props.like(this.props.state.swipeUsers[0])}}>like</Button>
+              <Button variant="primary" onClick = {() => {this.props.dislike(this.props.state.swipeUsers[0])}}>dislike</Button>
+            </Card.Body>
+          </Card>
+            )
+      }
+      
   }
 }
 
   render () {
     return (
       <div>
-        {this.bCard()}
+        {this.styledSwipeCard()}
       </div>
     )
   }

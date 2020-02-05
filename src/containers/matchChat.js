@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Message from '../components/message'
 import MessageForm from '../components/messageForm'
+import Button from 'react-bootstrap/Button'
+import Figure from 'react-bootstrap/Figure'
 
 class MatchChat extends Component {
 
@@ -19,9 +21,21 @@ class MatchChat extends Component {
   render () {
     return (
     <div>
-      <button onClick = {() => {this.props.backToMatchThumbnails()}}>back</button>
+
+      <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.backToMatchThumbnails()}}>back </Button>
       <br/>
-      chat window with {this.props.user.username}
+      <br/>
+      
+      <h2> chat window with {this.props.user.username} </h2>
+      <Figure>
+        <Figure.Image
+        width={50}
+        height={50}
+        alt="50x50"
+        src={this.props.user.image_url}
+        />
+      </Figure>
+      <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChatUsersProfilePage()}}>click to see their profile </Button>
       {this.displayMessages()}
       <MessageForm state = {this.props.state} sendMessage = {this.props.sendMessage}/>
       
