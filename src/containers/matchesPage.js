@@ -13,11 +13,18 @@ class MatchesPage extends Component {
     if (this.props.state.currentMatchChatUser && this.props.state.matchChatUserProfilePage){
       return <SwipeCard showCard = {true} state = {this.props.state} backToMatchChat = {this.props.backToMatchChat}/>
     }else if (this.props.state.currentMatchChatUser){
-      return <MatchChat user = {this.props.state.currentMatchChatUser} state = {this.props.state} backToMatchThumbnails = {this.props.backToMatchThumbnails} getMatchChatMessages = {this.props.getMatchChatMessages} sendMessage = {this.props.sendMessage} openMatchChatUsersProfilePage = {this.props.openMatchChatUsersProfilePage}/>
+      return <MatchChat user = {this.props.state.currentMatchChatUser} state = {this.props.state} backToMatchThumbnails = {this.props.backToMatchThumbnails} getMatchChatMessages = {this.props.getMatchChatMessages} sendMessage = {this.props.sendMessage} openMatchChatUsersProfilePage = {this.props.openMatchChatUsersProfilePage} clearMatchChatMessages = {this.props.clearMatchChatMessages}/>
     }else if (this.props.state.matches){
-        return this.props.state.matches.map((user) => {
-            return <MatchThumbnail user = {user}  key = {user._id} openMatchChat = {this.props.openMatchChat}/>
-        })
+
+        return (
+          <div>
+            <h2> click to chat with one of your matches</h2>
+            {this.props.state.matches.map((user) => {
+              return <MatchThumbnail user = {user}  key = {user._id} openMatchChat = {this.props.openMatchChat}/>
+            })}
+          </div>
+        )
+        
     }
 }
 

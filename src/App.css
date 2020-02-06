@@ -32,6 +32,10 @@ input {
   border: 1px solid black;
 }
 
+button {
+  border: 1px solid black;
+}
+
 .swipeCard {
   height: 500px;
   width: 50%
@@ -42,4 +46,10 @@ input {
   height: 70%;
   width: 80% ;
   border: 2px solid saddlebrown;
+}
+
+.messages-div {
+  overflow: scroll; 
+  height: 250px;
+  width: 250px;
 }

@@ -7,6 +7,8 @@ import Figure from 'react-bootstrap/Figure'
 class MatchChat extends Component {
 
   componentDidMount(){
+    console.log("hey")
+    this.props.clearMatchChatMessages()
     this.props.getMatchChatMessages()
   }
 
@@ -20,6 +22,7 @@ class MatchChat extends Component {
 
   render () {
     return (
+  
     <div>
 
       <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.backToMatchThumbnails()}}>back </Button>
@@ -36,7 +39,9 @@ class MatchChat extends Component {
         />
       </Figure>
       <Button variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChatUsersProfilePage()}}>click to see their profile </Button>
-      {this.displayMessages()}
+      <div id = "msgs-div" class = "messages-div">
+        {this.displayMessages()}
+      </div>
       <MessageForm state = {this.props.state} sendMessage = {this.props.sendMessage}/>
       
     </div>

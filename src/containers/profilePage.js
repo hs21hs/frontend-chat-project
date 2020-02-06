@@ -7,13 +7,12 @@ class ProfilePage extends Component {
   render () {
     return (
     <div>
-       <h1>Profile Page</h1>
+       <h1>Your Profile Page</h1>
        <div >
             <UserThumbnail state = {this.props.state} />
        </div>
        <div>
-           {/* <button>set filters</button>
-           <button>edit user details</button> */}
+           
        </div>
     </div>
     )
@@ -21,3 +20,4 @@ class ProfilePage extends Component {
 }
 
 export default ProfilePage;
+

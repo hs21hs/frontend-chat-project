@@ -70,7 +70,7 @@ class App extends Component {
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
     if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like} getMyMatches = {this.getMyMatches}/>}
-    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage} openMatchChatUsersProfilePage = {this.openMatchChatUsersProfilePage} backToMatchChat = {this.backToMatchChat}/>}
+    if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage} openMatchChatUsersProfilePage = {this.openMatchChatUsersProfilePage} backToMatchChat = {this.backToMatchChat} clearMatchChatMessages = {this.clearMatchChatMessages}/>}
   }
 
   navBar = () => {
@@ -205,8 +205,10 @@ class App extends Component {
         openChatUser: null,
         currentChatMessages: null,
         currentMatchChatUser: null,
+        matchChatUserProfilePage: null,
         currentMatchChatMessages: null,
         matches: null, 
+        newMatchAlert: null,
         token: null
       }
     )
@@ -293,8 +295,15 @@ class App extends Component {
       }
 
       newMatchDetected = (match) => {
-        alert("you have a new match")
         this.getMyMatches()
+        this.setState({newMatchAlert: true},
+          () => {
+            setTimeout(() => {
+            this.setState({newMatchAlert: false})
+            }, 1000)
+          }
+        )
+        
       }
 
 
@@ -411,11 +420,6 @@ class App extends Component {
       socket.emit('newMessage',msg)
     }
   
-    newMessageDetected = (message) => {
-      alert("you have a new message")
-      
-    }
-
     setMatchesNewMsgTrue = (msg) => {
       console.log('ready to set it true', msg)
       if (this.state.matches){
@@ -431,9 +435,20 @@ class App extends Component {
       }
     }
 
+    showNewMatchAlert = () => {
+      if(this.state.newMatchAlert === true){
+        return <h1>u have a new match!</h1>
+      }
+    }
+
+    clearMatchChatMessages = () => {
+      this.setState({currentMatchChatMessages: null})
+    }
+
   render () {
     return (
       <div class = "container">
+        {this.showNewMatchAlert()}
         {this.navBar()}
         {this.whichPage()}
       </div>
