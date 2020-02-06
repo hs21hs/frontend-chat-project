@@ -9,6 +9,12 @@ class MatchesPage extends Component {
     
   }
 
+  clickInstructions = () => {
+    if (this.props.state.matches.length > 0){
+      return <h2> click to chat with one of your matches</h2>
+    }
+  }
+
   createMatchThumbnails = () => {
     if (this.props.state.currentMatchChatUser && this.props.state.matchChatUserProfilePage){
       return <SwipeCard showCard = {true} state = {this.props.state} backToMatchChat = {this.props.backToMatchChat}/>
@@ -18,7 +24,7 @@ class MatchesPage extends Component {
 
         return (
           <div>
-            <h2> click to chat with one of your matches</h2>
+            {this.clickInstructions()}
             {this.props.state.matches.map((user) => {
               return <MatchThumbnail user = {user}  key = {user._id} openMatchChat = {this.props.openMatchChat}/>
             })}
