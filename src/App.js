@@ -28,7 +28,7 @@ class App extends Component {
   
   componentDidMount(){
     {this.socketF(this.newMatchDetected)}
-   
+    
   }
 
   socketF = (newMatchDetected) =>{
@@ -68,7 +68,7 @@ class App extends Component {
   whichPage = () => {
     if (this.state.page === "signUp"){return <SignUp signUp = {this.signUp} state = {this.state}/>}
     if (this.state.page === "login"){return <Login login = {this.login} state = {this.state}/>}
-    if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} />}
+    if (this.state.page === "profilePage"){return <ProfilePage state = {this.state} getMyMatches = {this.getMyMatches}/>}
     if (this.state.page === "swipePage"){return <SwipePage state = {this.state} getSwipeUsers = {this.getSwipeUsers} dislike = {this.dislike} like = {this.like} getMyMatches = {this.getMyMatches}/>}
     if (this.state.page === "matchesPage"){return <MatchesPage state = {this.state} getMyMatches = {this.getMyMatches} openMatchChat = {this.openMatchChat} backToMatchThumbnails = {this.backToMatchThumbnails} getMatchChatMessages = {this.getMatchChatMessages} sendMessage = {this.sendMatchChatMessage} openMatchChatUsersProfilePage = {this.openMatchChatUsersProfilePage} backToMatchChat = {this.backToMatchChat} clearMatchChatMessages = {this.clearMatchChatMessages}/>}
   }
@@ -135,8 +135,15 @@ class App extends Component {
     const email = e.target.elements.email.value
     const breed = e.target.elements.breed.value
     const age = e.target.elements.age.value
-  
-    const user = {username,password,email,breed,age}
+    const bio = e.target.elements.bio.value
+    const image_url = e.target.elements.image_url.value
+    
+    let user = null
+    if(image_url === ""){
+      user = {username,password,email,breed,age,bio}
+    }else{
+      user = {username,password,email,breed,age,bio,image_url}
+    }
 
     fetch("http://localhost:3000/users", {
       method: "POST",
@@ -150,7 +157,7 @@ class App extends Component {
     .then((body) => {
       if(body.user){
         this.setState({currentUser: body.user, token: body.token},
-          () => {this.switchPage("swipePage")}
+          () => {this.switchPage("profilePage")}
         ) 
       }else{alert("failed, try again pls!")}
     })
@@ -175,7 +182,7 @@ class App extends Component {
     .then((body) => {
       if(body.user){
         this.setState({currentUser: body.user,token: body.token},
-          () => {this.switchPage("swipePage")}
+          () => {this.switchPage("profilePage")}
         ) 
       }else{alert("failed, try again pls!")}
     })

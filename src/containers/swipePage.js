@@ -7,7 +7,7 @@ class SwipePage extends Component {
 
     componentDidMount(){
         this.props.getSwipeUsers()
-        this.props.getMyMatches()
+        
     }
 
     showUsers = () => {

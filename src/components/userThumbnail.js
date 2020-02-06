@@ -13,8 +13,7 @@ class UserThumbnail extends Component {
             <Card.Title>{this.props.state.currentUser.username}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">age:{this.props.state.currentUser.age}, breed:{this.props.state.currentUser.breed}</Card.Subtitle>
             <Card.Text>
-              Bio: Some quick example text to build on the card title and make up the bulk of
-              the card's content.
+              Bio: {this.props.state.currentUser.bio}
             </Card.Text>
             {/* <Button variant="primary">filter</Button>
             <Button variant="primary">edit</Button> */}

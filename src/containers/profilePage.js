@@ -2,7 +2,12 @@ import React, {Component} from 'react';
 import Message from '../components/message';
 import UserThumbnail from '../components/userThumbnail';
 
+
 class ProfilePage extends Component {
+
+  componentDidMount(){
+    this.props.getMyMatches()
+  }
 
   render () {
     return (

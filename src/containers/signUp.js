@@ -12,8 +12,9 @@ class SignUp extends Component {
             <input name = "username" placeholder = "dogs name"></input>
             <input name = "breed" placeholder = "breed"></input>
             <input name = "age" placeholder = "age"></input>
+            <input name = "bio" placeholder = "bio"></input>
+            <input name = "image_url" placeholder = "profile pic url"></input>
             <button type = "submit"> signUp</button>
-            
         </form>
     </div>
     )
