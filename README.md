@@ -1,4 +1,4 @@
-(PetPal frontend) Node JS/ React JS/ Jest/ MongoDb/ Express/ Mongoose
+(PetPal frontend) Node JS/ React JS/ Jest/ MongoDb/ Express/ Mongoose.
 A full stack web application, designed to help dog owners find play dates for their dogs.(Tinder style interface)
 
 -Implemented TTD for backend with Jest testing framework.
