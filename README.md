@@ -15,7 +15,7 @@ To test this application;
 (if you choose to sign up a new user and do not provide an image url it will give you a default profile picture).
 Thank You!
 
-
+![](assets/petpal-msg-gif.gif)
 
 
 
