@@ -17,7 +17,7 @@ class MatchThumbnail extends Component {
         src={this.props.user.image_url}
         />
       </Figure> <br></br>
-      name: {this.props.user.username} New Msg!</Button>
+      name: {this.props.user.username}- New Msg!</Button>
     }else if(this.props.user.newMessage !== true && this.props.user.openedMatch === false){
       return <Button style = {{width: 200}} variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
        <Figure>
@@ -28,7 +28,7 @@ class MatchThumbnail extends Component {
         src={this.props.user.image_url}
         />
       </Figure> <br></br>
-      name: {this.props.user.username} New Match!</Button>
+      name: {this.props.user.username}- New Match!</Button>
     }else if(this.props.user.newMessage === true && this.props.user.openedMatch === false){
       return <Button style = {{width: 200}} variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
        <Figure>
@@ -39,7 +39,7 @@ class MatchThumbnail extends Component {
         src={this.props.user.image_url}
         />
       </Figure> <br></br>
-      name: {this.props.user.username} New msg & New Match!</Button>
+      name: {this.props.user.username}- New msg & New Match!</Button>
     }else{
       return <Button style = {{width: 200}} variant="outline-secondary" size = "sm" onClick = {() => {this.props.openMatchChat(this.props.user)}}> 
       <Figure>
