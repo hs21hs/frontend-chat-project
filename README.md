@@ -1,3 +1,24 @@
+(PetPal frontend) Node JS/ React JS/ Jest/ MongoDb/ Express/ Mongoose
+A full stack web application, designed to help dog owners find play dates for their dogs.(Tinder style interface)
+
+-Implemented TTD for backend with Jest testing framework.
+-Utilized Socket.io to implement real time functionality for messaging and matches.
+-MVC design pattern and RESTful routes.
+-Employed validation using JWT.
+
+To test this application;
+1. Please first navigate to the backend repository, link below, and set that up.
+-backend link: https://github.com/hs21hs/first-chat-project
+2. In the terminal enter "npm start". 
+3. In order to test messaging run "npm start" in a seperate terminal and login with a second user.
+4. Note- it is suggested to login with seeded user "l@hotmail.com", and to test chat features login a second time with "d@hotmail.com". Password for both users is "default123".
+(if you choose to sign up a new user and do not provide an image url it will give you a default profile picture).
+Thank You!
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
